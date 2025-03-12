@@ -3,25 +3,783 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang với 5 Nút Bấm</title>
+    <title>Portfolio Developer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --primary-color: #0a192f;
+            --secondary-color: #112240;
+            --accent-color: #64ffda;
+            --text-color: #ccd6f6;
+            --text-secondary: #8892b0;
+            --transition-time: 0.5s;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
         body {
-            text-align: center;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .background-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--transition-time) infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+        
+        header {
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            background-color: rgba(10, 25, 47, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 16px;
+            position: relative;
+            padding: 5px 0;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--accent-color);
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .content-section {
+            min-height: 100vh;
+            padding: 100px 50px 50px;
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity var(--transition-time), transform var(--transition-time);
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+        }
+        
+        .content-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+            position: relative;
+        }
+        
+        .section-title {
+            font-size: 32px;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 70%;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        /* Home Section */
+        #home {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding-left: 100px;
+        }
+        
+        .intro-text {
+            max-width: 600px;
+        }
+        
+        .greeting {
+            color: var(--accent-color);
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        
+        .name {
+            font-size: 70px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 50px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            color: var(--text-secondary);
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .cta-button {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            background-color: rgba(100, 255, 218, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        /* About Section */
+        #about {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+            max-width: 600px;
+        }
+        
+        .about-text p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .skill-item {
+            margin-right: 20px;
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 20px;
+            color: var(--text-secondary);
+        }
+        
+        .skill-item::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+        
+        .profile-image {
+            flex: 0 0 300px;
+            position: relative;
+        }
+        
+        .profile-image img {
+            width: 100%;
+            border-radius: 5px;
+            filter: grayscale(100%) contrast(1.2);
+            transition: filter 0.3s;
+        }
+        
+        .profile-image::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            width: 100%;
+            height: 100%;
+            border: 2px solid var(--accent-color);
+            border-radius: 5px;
+            z-index: -1;
+            transition: transform 0.3s;
+        }
+        
+        .profile-image:hover img {
+            filter: grayscale(0%);
+        }
+        
+        .profile-image:hover::after {
+            transform: translate(-10px, -10px);
+        }
+        
+        /* Projects Section */
+        #projects {
+            padding-top: 120px;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
             margin-top: 50px;
         }
-        button {
-            margin: 10px;
-            padding: 10px 20px;
+        
+        .project-card {
+            background-color: var(--secondary-color);
+            border-radius: 5px;
+            padding: 25px;
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s;
+        }
+        
+        .project-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .project-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .folder-icon {
+            color: var(--accent-color);
+            font-size: 30px;
+        }
+        
+        .project-links a {
+            color: var(--text-color);
+            margin-left: 15px;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+        
+        .project-links a:hover {
+            color: var(--accent-color);
+        }
+        
+        .project-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+        
+        .project-card:hover .project-title {
+            color: var(--accent-color);
+        }
+        
+        .project-description {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .project-tech span {
+            margin-right: 15px;
+            margin-bottom: 5px;
+        }
+        
+        /* Contact Section */
+        #contact {
+            text-align: center;
+            padding: 150px 20px;
+        }
+        
+        .contact-title {
+            color: var(--accent-color);
             font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .contact-heading {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        
+        .contact-text {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+        
+        .social-links a {
+            color: var(--text-color);
+            font-size: 24px;
+            margin: 0 15px;
+            transition: all 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent-color);
+            transform: translateY(-5px);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        /* Mobile Navigation */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            height: 3px;
+            width: 100%;
+            background-color: var(--accent-color);
+            transition: all 0.3s;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+            
+            .menu-toggle {
+                display: flex;
+                z-index: 101;
+            }
+            
+            nav {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 70%;
+                height: 100vh;
+                background-color: var(--secondary-color);
+                transform: translateX(100%);
+                transition: transform 0.5s;
+                z-index: 100;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            nav.active {
+                transform: translateX(0);
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 15px 0;
+            }
+            
+            .menu-toggle.active span:nth-child(1) {
+                transform: translateY(9px) rotate(45deg);
+            }
+            
+            .menu-toggle.active span:nth-child(2) {
+                opacity: 0;
+            }
+            
+            .menu-toggle.active span:nth-child(3) {
+                transform: translateY(-9px) rotate(-45deg);
+            }
+            
+            #home {
+                padding-left: 20px;
+            }
+            
+            .name {
+                font-size: 40px;
+            }
+            
+            .tagline {
+                font-size: 30px;
+            }
+            
+            #about {
+                flex-direction: column;
+            }
+            
+            .profile-image {
+                margin-top: 50px;
+                align-self: center;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Trang HTML với 5 Nút Bấm</h1>
-    <button>Nút 1</button>
-    <button>Nút 2</button>
-    <button>Nút 3</button>
-    <button>Nút 4</button>
-    <button>Nút 5</button>
+    <div class="background-animation" id="stars"></div>
+    
+    <header>
+        <a href="#" class="logo">&lt;/&gt;</a>
+        <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#home" class="nav-link">Trang Chủ</a></li>
+                <li><a href="#about" class="nav-link">Giới Thiệu</a></li>
+                <li><a href="#projects" class="nav-link">Dự Án</a></li>
+                <li><a href="#contact" class="nav-link">Liên Hệ</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section id="home" class="content-section active">
+        <div class="intro-text">
+            <p class="greeting">Xin chào, tôi là</p>
+            <h1 class="name">Thái Hưng Thịnh</h1>
+            <h2 class="tagline">Tôi xây dựng ứng dụng web.</h2>
+            <p class="description">Tôi là một lập trình viên full-stack chuyên về phát triển các ứng dụng web hiện đại. Hiện tại, tôi đang tập trung vào việc xây dựng các sản phẩm có trải nghiệm người dùng tuyệt vời và hiệu suất cao.</p>
+            <a href="#projects" class="cta-button">Xem Dự Án</a>
+        </div>
+    </section>
+    
+    <section id="about" class="content-section">
+        <div class="about-text">
+            <h2 class="section-title">Về Tôi</h2>
+            <p>Xin chào! Tôi là Thái Hưng Thịnh, một lập trình viên đam mê với công nghệ web. Hành trình của tôi bắt đầu từ năm 2018 khi tôi tình cờ tìm hiểu về HTML và CSS.</p>
+            <p>Hiện tại, tôi có hơn 5 năm kinh nghiệm trong việc xây dựng các sản phẩm số, từ các trang web đơn giản đến các ứng dụng web phức tạp. Tôi thích làm việc ở cả frontend và backend, và luôn tìm cách để tối ưu hóa hiệu suất và trải nghiệm người dùng.</p>
+            <p>Dưới đây là một số công nghệ tôi đã làm việc gần đây:</p>
+            <div class="skills">
+                <div class="skill-item">JavaScript (ES6+)</div>
+                <div class="skill-item">React</div>
+                <div class="skill-item">Node.js</div>
+                <div class="skill-item">TypeScript</div>
+                <div class="skill-item">Express</div>
+                <div class="skill-item">MongoDB</div>
+                <div class="skill-item">GraphQL</div>
+                <div class="skill-item">Next.js</div>
+            </div>
+        </div>
+        <div class="profile-image">
+            <img src="./me.jpg" alt="Thái Hưng Thịnh">
+        </div>
+    </section>
+    
+    <section id="projects" class="content-section">
+        <h2 class="section-title">Dự Án Nổi Bật</h2>
+        <div class="projects-grid">
+            <div class="project-card">
+                <div class="project-top">
+                    <i class="folder-icon far fa-folder-open"></i>
+                    <div class="project-links">
+                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                </div>
+                <h3 class="project-title">Ứng dụng quản lý công việc</h3>
+                <p class="project-description">Một ứng dụng web giúp người dùng quản lý công việc hàng ngày với các tính năng như tạo danh sách việc cần làm, đặt thời hạn, và theo dõi tiến độ.</p>
+                <div class="project-tech">
+                    <span>React</span>
+                    <span>Node.js</span>
+                    <span>MongoDB</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <div class="project-top">
+                    <i class="folder-icon far fa-folder-open"></i>
+                    <div class="project-links">
+                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                </div>
+                <h3 class="project-title">Nền tảng học trực tuyến</h3>
+                <p class="project-description">Một nền tảng học trực tuyến cho phép giáo viên tạo khóa học và học viên đăng ký tham gia. Hỗ trợ video bài giảng, bài kiểm tra và diễn đàn thảo luận.</p>
+                <div class="project-tech">
+                    <span>Next.js</span>
+                    <span>Express</span>
+                    <span>PostgreSQL</span>
+                </div>
+            </div>
+            
+            <div class="project-card">
+                <div class="project-top">
+                    <i class="folder-icon far fa-folder-open"></i>
+                    <div class="project-links">
+                        <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="#" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+                    </div>
+                </div>
+                <h3 class="project-title">Ứng dụng thời tiết</h3>
+                <p class="project-description">Ứng dụng cung cấp thông tin thời tiết theo thời gian thực với giao diện trực quan và dự báo chi tiết cho 7 ngày tới.</p>
+                <div class="project-tech">
+                    <span>React</span>
+                    <span>OpenWeather API</span>
+                    <span>Chart.js</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="contact" class="content-section">
+        <p class="contact-title">Liên hệ</p>
+        <h2 class="contact-heading">Hãy kết nối với tôi</h2>
+        <p class="contact-text">Tôi luôn mở với các cơ hội mới. Dù bạn có câu hỏi hay chỉ muốn chào hỏi, tôi sẽ cố gắng phản hồi sớm nhất có thể!</p>
+        <a href="mailto:example@gmail.com" class="cta-button">Gửi Email</a>
+        
+        <div class="social-links">
+            <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+    </section>
+    
+    <footer>
+        <p>Thiết kế & Xây dựng bởi Thái Hưng Thịnh © 2025</p>
+    </footer>
+    
+    <script>
+        // Tạo hiệu ứng sao lấp lánh
+        function createStars() {
+            const stars = document.getElementById('stars');
+            const count = 100;
+            
+            for (let i = 0; i < count; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                
+                // Kích thước ngẫu nhiên
+                const size = Math.random() * 3;
+                star.style.width = size + 'px';
+                star.style.height = size + 'px';
+                
+                // Vị trí ngẫu nhiên
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                
+                // Thời gian nhấp nháy ngẫu nhiên
+                star.style.animationDuration = 2 + Math.random() * 3 + 's';
+                star.style.animationDelay = Math.random() * 5 + 's';
+                
+                stars.appendChild(star);
+            }
+        }
+        
+        // Xử lý chuyển tab
+        function setupNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('.content-section');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const nav = document.querySelector('nav');
+            
+            // Xử lý menu mobile
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                nav.classList.toggle('active');
+            });
+            
+            // Xử lý click vào các liên kết điều hướng
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // Lấy ID của section từ href
+                    const targetId = link.getAttribute('href').substring(1);
+                    
+                    // Ẩn tất cả các section
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // Hiển thị section được chọn
+                    document.getElementById(targetId).classList.add('active');
+                    
+                    // Đóng menu mobile nếu đang mở
+                    menuToggle.classList.remove('active');
+                    nav.classList.remove('active');
+                    
+                    // Cập nhật URL
+                    history.pushState(null, null, `#${targetId}`);
+                    
+                    // Cuộn lên đầu trang
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Đảm bảo rằng section hiển thị đúng
+                    setTimeout(() => {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'auto'
+                        });
+                    }, 100);
+                });
+            });
+            
+            // Xử lý khi tải trang với hash
+            function handleHash() {
+                const hash = window.location.hash.substring(1);
+                if (hash) {
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    const targetSection = document.getElementById(hash);
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                        // Cuộn lên đầu trang khi chuyển tab bằng hash
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'auto'
+                        });
+                    } else {
+                        sections[0].classList.add('active');
+                    }
+                }
+            }
+            
+            // Xử lý khi URL thay đổi
+            window.addEventListener('hashchange', handleHash);
+            
+            // Kiểm tra hash khi tải trang
+            if (window.location.hash) {
+                handleHash();
+            } else {
+                // Nếu không có hash, hiển thị trang chủ
+                sections[0].classList.add('active');
+            }
+            
+            // Xử lý nút "Xem Dự Án" trên trang chủ
+            document.querySelector('.cta-button').addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                
+                // Ẩn tất cả các section
+                sections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Hiển thị section được chọn
+                document.getElementById(targetId).classList.add('active');
+                
+                // Cập nhật URL
+                history.pushState(null, null, `#${targetId}`);
+                
+                // Cuộn lên đầu trang
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+        
+        // Khởi tạo khi trang đã tải xong
+        document.addEventListener('DOMContentLoaded', () => {
+            createStars();
+            setupNavigation();
+        });
+    </script>
 </body>
 </html>
